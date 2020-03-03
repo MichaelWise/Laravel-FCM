@@ -125,14 +125,14 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     }
 
     /**
+     * @param $responseInJson
      * @internal
      *
-     * @param $responseInJson
      */
     private function parse($responseInJson)
     {
         if (array_key_exists(self::MULTICAST_ID, $responseInJson)) {
-            $this->messageId;
+            $this->messageId = $responseInJson[self::MULTICAST_ID];
         }
 
         if (array_key_exists(self::SUCCESS, $responseInJson)) {
@@ -149,9 +149,9 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     }
 
     /**
+     * @param $responseInJson
      * @internal
      *
-     * @param $responseInJson
      */
     private function parseResult($responseInJson)
     {
@@ -167,11 +167,11 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     }
 
     /**
-     * @internal
-     *
      * @param $responseInJson
      *
      * @return bool
+     * @internal
+     *
      */
     private function needResultParsing($responseInJson)
     {
@@ -179,11 +179,11 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     }
 
     /**
-     * @internal
-     *
      * @param $results
      *
      * @return bool
+     * @internal
+     *
      */
     private function isSent($results)
     {
@@ -191,12 +191,12 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     }
 
     /**
-     * @internal
-     *
      * @param $index
      * @param $result
      *
      * @return bool
+     * @internal
+     *
      */
     private function needToBeModify($index, $result)
     {
@@ -212,12 +212,12 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     }
 
     /**
-     * @internal
-     *
      * @param $index
      * @param $result
      *
      * @return bool
+     * @internal
+     *
      */
     private function needToBeDeleted($index, $result)
     {
@@ -234,12 +234,12 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     }
 
     /**
-     * @internal
-     *
      * @param $index
      * @param $result
      *
      * @return bool
+     * @internal
+     *
      */
     private function needToResend($index, $result)
     {
@@ -255,26 +255,26 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     }
 
     /**
-     * @internal
-     *
      * @param $result
      *
      * @return bool
+     * @internal
+     *
      */
     private function checkMissingToken($result)
     {
         $hasMissingToken = (array_key_exists(self::ERROR, $result) && in_array(self::MISSING_REGISTRATION, $result));
 
-        $this->hasMissingToken = (bool) ($this->hasMissingToken | $hasMissingToken);
+        $this->hasMissingToken = (bool)($this->hasMissingToken | $hasMissingToken);
 
         return $hasMissingToken;
     }
 
     /**
-     * @internal
-     *
      * @param $index
      * @param $result
+     * @internal
+     *
      */
     private function needToAddError($index, $result)
     {
@@ -293,10 +293,10 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
         $logger = new Logger('Laravel-FCM');
         $logger->pushHandler(new StreamHandler(storage_path('logs/laravel-fcm.log')));
 
-        $logMessage = 'notification send to '.count($this->tokens).' devices'.PHP_EOL;
-        $logMessage .= 'success: '.$this->numberTokensSuccess.PHP_EOL;
-        $logMessage .= 'failures: '.$this->numberTokensFailure.PHP_EOL;
-        $logMessage .= 'number of modified token : '.$this->numberTokenModify.PHP_EOL;
+        $logMessage = 'notification send to ' . count($this->tokens) . ' devices' . PHP_EOL;
+        $logMessage .= 'success: ' . $this->numberTokensSuccess . PHP_EOL;
+        $logMessage .= 'failures: ' . $this->numberTokensFailure . PHP_EOL;
+        $logMessage .= 'number of modified token : ' . $this->numberTokenModify . PHP_EOL;
 
         $logger->info($logMessage);
     }
@@ -326,6 +326,16 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     public function numberSuccess()
     {
         return $this->numberTokensSuccess;
+    }
+
+    /**
+     * Get message id 
+     * 
+     * @return int
+     */
+    public function getMessageId()
+    {
+        return $this->messageId;
     }
 
     /**
